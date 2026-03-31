@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brewskies Downtown | Seymour, IN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #c8a96e;
+    --dark: #1a1209;
+    --charcoal: #2a2018;
+    --cream: #f5f0e8;
+    --text: #1c1712;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--cream); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+    background: transparent;
+    transition: background 0.4s ease, backdrop-filter 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(26,18,9,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(200,169,110,0.15);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: rgba(245,240,232,0.85); text-decoration: none;
+    font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: var(--gold); color: var(--dark) !important;
+    padding: 0.5rem 1.2rem; border-radius: 4px;
+    font-weight: 600 !important;
+  }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--cream); transition: all 0.3s; }
+  .mobile-menu {
+    display: none; position: fixed; top: 72px; left: 0; right: 0;
+    background: rgba(26,18,9,0.97); backdrop-filter: blur(14px);
+    padding: 1.5rem 2rem; z-index: 999;
+    border-bottom: 1px solid rgba(200,169,110,0.2);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: 0.75rem 0; color: var(--cream);
+    text-decoration: none; font-size: 1rem; letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .mobile-menu a:last-child { border: none; color: var(--gold); font-weight: 600; padding-top: 1rem; }
+
+  /* HERO */
+  .hero {
+    position: relative; height: 100vh; min-height: 620px;
+    overflow: hidden; display: flex; align-items: center; justify-content: center;
+  }
+  .hero-slides { position: absolute; inset: 0; }
+  .slide {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    opacity: 0; transition: opacity 1.5s ease;
+    animation: kenBurns 10s ease-in-out infinite alternate;
+  }
+  .slide.active { opacity: 1; }
+  @keyframes kenBurns {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(26,18,9,0.35) 0%, rgba(26,18,9,0.65) 100%);
+  }
+  .hero-content {
+    position: relative; z-index: 2; text-align: center; padding: 0 1.5rem;
+    max-width: 780px;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); border: 1px solid var(--gold);
+    padding: 0.3rem 1rem; border-radius: 2px; margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 1.05; color: #fff; margin-bottom: 1.2rem;
+    opacity: 0; animation: fadeUp 0.9s 0.5s forwards;
+  }
+  .hero-title em { color: var(--gold); font-style: italic; }
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(245,240,232,0.82); margin-bottom: 2.4rem;
+    font-weight: 300; line-height: 1.6;
+    opacity: 0; animation: fadeUp 0.9s 0.7s forwards;
+  }
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.9s 0.9s forwards;
+  }
+  .btn-primary {
+    display: inline-block; background: var(--gold); color: var(--dark);
+    padding: 0.85rem 2.2rem; border-radius: 4px;
+    font-weight: 700; font-size: 0.9rem; letter-spacing: 0.06em;
+    text-transform: uppercase; text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,169,110,0.4); }
+  .btn-outline {
+    display: inline-block; border: 2px solid rgba(245,240,232,0.6); color: var(--cream);
+    padding: 0.85rem 2.2rem; border-radius: 4px;
+    font-weight: 600; font-size: 0.9rem; letter-spacing: 0.06em;
+    text-transform: uppercase; text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-scroll {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    color: rgba(245,240,232,0.5); font-size: 0.65rem; letter-spacing: 0.15em;
+    text-transform: uppercase; z-index: 2;
+    opacity: 0; animation: fadeUp 1s 1.4s forwards;
+  }
+  .scroll-line {
+    width: 1px; height: 44px; background: rgba(200,169,110,0.5);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%,100% { transform: scaleY(1); opacity: 0.5; }
+    50% { transform: scaleY(0.6); opacity: 1; }
+  }
+
+  /* STATS */
+  .stats {
+    background: var(--charcoal);
+    border-top: 1px solid rgba(200,169,110,0.2);
+    border-bottom: 1px solid rgba(200,169,110,0.2);
+    padding: 2.5rem 2rem;
+  }
+  .stats-inner {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    text-align: center; gap: 1rem;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem; color: var(--gold); font-weight: 700;
+  }
+  .stat-label {
+    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(245,240,232,0.55); margin-top: 0.25rem;
+  }
+
+  /* SECTION HEADERS */
+  section { padding: 6rem 2rem; }
+  .section-tag {
+    display: inline-block; font-size: 0.68rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15; margin-bottom: 1.2rem;
+  }
+  .section-divider {
+    width: 48px; height: 2px; background: var(--gold); margin-bottom: 2rem;
+  }
+
+  /* ABOUT */
+  .about { background: var(--dark); }
+  .about-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  }
+  .about-text p {
+    font-size: 1.05rem; line-height: 1.8; color: rgba(245,240,232,0.75);
+    margin-bottom: 1.2rem; font-weight: 300;
+  }
+  .about-img-wrap {
+    position: relative;
+  }
+  .about-img-wrap img {
+    width: 100%; border-radius: 4px;
+    display: block; object-fit: cover; height: 460px;
+  }
+  .about-img-wrap::before {
+    content: ''; position: absolute;
+    top: -16px; left: -16px; right: 16px; bottom: 16px;
+    border: 2px solid rgba(200,169,110,0.3); border-radius: 4px;
+    z-index: -1;
+  }
+  .features {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 2rem;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(200,169,110,0.12);
+    border-radius: 6px; padding: 1rem 1.2rem;
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .feature-card:hover { transform: translateY(-4px); border-color: rgba(200,169,110,0.4); }
+  .feature-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .feature-title { font-size: 0.82rem; font-weight: 600; color: var(--gold); margin-bottom: 0.25rem; }
+  .feature-desc { font-size: 0.78rem; color: rgba(245,240,232,0.55); line-height: 1.5; }
+
+  /* GALLERY */
+  .gallery { background: var(--charcoal); }
+  .gallery-inner { max-width: 1200px; margin: 0 auto; }
+  .gallery-header { text-align: center; margin-bottom: 3rem; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    gap: 12px;
+  }
+  .gallery-item {
+    overflow: hidden; border-radius: 4px; cursor: pointer;
+    position: relative;
+  }
+  .gallery-item:nth-child(1) { grid-column: span 2; }
+  .gallery-item:nth-child(5) { grid-column: span 2; }
+  .gallery-item img {
+    width: 100%; height: 280px; object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .gallery-item:nth-child(1) img,
+  .gallery-item:nth-child(5) img { height: 320px; }
+  .gallery-item:hover img { transform: scale(1.06); }
+
+  /* MENU */
+  .menu-section { background: var(--dark); }
+  .menu-inner { max-width: 1000px; margin: 0 auto; }
+  .menu-header { text-align: center; margin-bottom: 3rem; }
+  .menu-tabs {
+    display: flex; gap: 0; flex-wrap: wrap; justify-content: center;
+    border-bottom: 1px solid rgba(200,169,110,0.2); margin-bottom: 2.5rem;
+  }
+  .tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: transparent; border: none; cursor: pointer;
+    color: rgba(245,240,232,0.5); font-size: 0.8rem;
+    letter-spacing: 0.1em; text-transform: uppercase; font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: var(--gold); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .menu-item {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 0.9rem 1.1rem;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(200,169,110,0.1);
+    border-radius: 6px;
+    transition: border-color 0.2s;
+  }
+  .menu-item:hover { border-color: rgba(200,169,110,0.35); }
+  .menu-item-name { font-size: 0.88rem; font-weight: 500; color: var(--cream); }
+  .menu-item-desc { font-size: 0.74rem; color: rgba(245,240,232,0.45); margin-top: 0.2rem; line-height: 1.4; }
+  .menu-item-price { font-size: 0.9rem; font-weight: 700; color: var(--gold); flex-shrink: 0; margin-left: 1rem; }
+
+  /* QUOTE */
+  .quote-section {
+    background: var(--charcoal);
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+  .quote-inner { max-width: 720px; margin: 0 auto; }
+  blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-style: italic; color: var(--cream); line-height: 1.55;
+    margin-bottom: 1.5rem;
+  }
+  blockquote::before { content: '\201C'; color: var(--gold); font-size: 3rem; line-height: 0; vertical-align: -0.6em; margin-right: 0.2rem; }
+  .quote-author { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(200,169,110,0.7); }
+
+  /* CONTACT */
+  .contact { background: var(--dark); }
+  .contact-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+  }
+  .contact-card {
+    display: flex; align-items: flex-start; gap: 1.2rem;
+    padding: 1.5rem; background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(200,169,110,0.12); border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: transform 0.25s, border-color 0.25s;
+    text-decoration: none;
+  }
+  .contact-card:hover { transform: translateX(6px); border-color: rgba(200,169,110,0.4); }
+  .contact-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .contact-label { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+  .contact-value { font-size: 0.95rem; color: var(--cream); line-height: 1.5; }
+  .hours-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .hours-row {
+    display: flex; justify-content: space-between;
+    font-size: 0.82rem; padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: rgba(245,240,232,0.7);
+  }
+  .hours-day { font-weight: 500; }
+
+  /* FOOTER */
+  footer {
+    background: #0f0a04; padding: 2.5rem 2rem;
+    text-align: center; border-top: 1px solid rgba(200,169,110,0.15);
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif; font-size: 1.5rem;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .footer-sub { font-size: 0.75rem; color: rgba(245,240,232,0.35); letter-spacing: 0.1em; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .about-img-wrap { order: -1; }
+    .about-img-wrap img { height: 300px; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item:nth-child(1),
+    .gallery-item:nth-child(5) { grid-column: span 2; }
+    .tab-panel.active { grid-template-columns: 1fr; }
+    .contact-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .features { grid-template-columns: 1fr; }
+    .hours-grid { grid-template-columns: 1fr; }
+    section { padding: 4rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Brewskies Downtown</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="tel:8125224308" class="nav-cta">Call Us</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#menu" onclick="closeMenu()">Menu</a>
+  <a href="#gallery" onclick="closeMenu()">Gallery</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <a href="tel:8125224308">📞 (812) 522-4308</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-slides">
+    <div class="slide active" style="background-image:url('photo2.jpg')"></div>
+    <div class="slide" style="background-image:url('photo10.jpg')"></div>
+    <div class="slide" style="background-image:url('crop1.jpg')"></div>
+    <div class="slide" style="background-image:url('crop3.jpg')"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Downtown Seymour, Indiana</div>
+    <h1 class="hero-title">Burgers, Wings<br>& <em>Good Times</em></h1>
+    <p class="hero-subtitle">Family restaurant &amp; bar in the heart of Seymour.<br>Real food, cold drinks, and great company since day one.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-primary">View Menu</a>
+      <a href="tel:8125224308" class="btn-outline">(812) 522-4308</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-num">4.6★</div>
+      <div class="stat-label">Google Rating</div>
+    </div>
+    <div>
+      <div class="stat-num">291+</div>
+      <div class="stat-label">Reviews</div>
+    </div>
+    <div>
+      <div class="stat-num">30+</div>
+      <div class="stat-label">Menu Items</div>
+    </div>
+    <div>
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Recommend</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-text reveal">
+      <span class="section-tag">Our Story</span>
+      <h2 class="section-title">Your Downtown<br>Neighborhood Spot</h2>
+      <div class="section-divider"></div>
+      <p>Brewskies Downtown is the go-to gathering place in the heart of Seymour. Whether you're coming in for a game, a family dinner, or just good wings with good people — this is your place.</p>
+      <p>We serve everything from hand-breaded tenderloins and fresh burgers to pizzas, wraps, shrimp baskets, and homemade sides. Cold beer on tap, craft cocktails, and a menu that keeps people coming back.</p>
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">🍔</div>
+          <div class="feature-title">Burgers & Sandwiches</div>
+          <div class="feature-desc">Hand-crafted classics and signature builds</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🍗</div>
+          <div class="feature-title">Wings & Starters</div>
+          <div class="feature-desc">Bone-in, boneless, tossed your way</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🍕</div>
+          <div class="feature-title">Pizzas & More</div>
+          <div class="feature-desc">16" pies and cauliflower options too</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🍺</div>
+          <div class="feature-title">Bar & Drinks</div>
+          <div class="feature-desc">Cold drafts, cocktails & Red Bull</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-img-wrap reveal">
+      <img src="crop4.jpg" alt="Brewskies Downtown interior">
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <div class="gallery-inner">
+    <div class="gallery-header reveal">
+      <span class="section-tag">Gallery</span>
+      <h2 class="section-title">Inside Brewskies</h2>
+      <div class="section-divider" style="margin:0 auto 0;"></div>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item"><img src="crop6.jpg" alt="Brewskies food"></div>
+      <div class="gallery-item"><img src="crop7.jpg" alt="Brewskies bar"></div>
+      <div class="gallery-item"><img src="crop9.jpg" alt="Brewskies interior"></div>
+      <div class="gallery-item"><img src="crop3.jpg" alt="Brewskies food 2"></div>
+      <div class="gallery-item"><img src="photo2.jpg" alt="Brewskies atmosphere"></div>
+      <div class="gallery-item"><img src="crop1.jpg" alt="Brewskies interior 2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu-section" id="menu">
+  <div class="menu-inner">
+    <div class="menu-header reveal">
+      <span class="section-tag">What We're Serving</span>
+      <h2 class="section-title">The Menu</h2>
+      <div class="section-divider" style="margin:0 auto;"></div>
+    </div>
+    <div class="menu-tabs reveal">
+      <button class="tab-btn active" onclick="switchTab('starters')">Starters</button>
+      <button class="tab-btn" onclick="switchTab('burgers')">Burgers</button>
+      <button class="tab-btn" onclick="switchTab('sandwiches')">Sandwiches</button>
+      <button class="tab-btn" onclick="switchTab('dinners')">Dinners</button>
+      <button class="tab-btn" onclick="switchTab('pizza')">Pizza</button>
+    </div>
+
+    <div id="tab-starters" class="tab-panel active reveal">
+      <div class="menu-item"><div><div class="menu-item-name">Bone-In Wings (1 lb)</div><div class="menu-item-desc">Classic bone-in, your choice of sauce</div></div><div class="menu-item-price">$14.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Boneless Wings (Large)</div><div class="menu-item-desc">Crispy boneless tossed in your favorite sauce</div></div><div class="menu-item-price">$13.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Boneless Wings (Small)</div><div class="menu-item-desc">Smaller order, same great flavor</div></div><div class="menu-item-price">$9.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Buffalo Chicken Dip</div><div class="menu-item-desc">Served hot with chips</div></div><div class="menu-item-price">$8.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Nachos</div><div class="menu-item-desc">Loaded with all the toppings</div></div><div class="menu-item-price">$12.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Pulled Pork Nachos</div><div class="menu-item-desc">Nachos topped with slow-smoked pulled pork</div></div><div class="menu-item-price">$12.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Fried Pickle Chips</div><div class="menu-item-desc">Golden-fried dill pickle chips</div></div><div class="menu-item-price">$8.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Fried Mushrooms</div><div class="menu-item-desc">Beer-battered mushrooms</div></div><div class="menu-item-price">$9.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Cheeseballs</div><div class="menu-item-desc">Served with homemade ranch</div></div><div class="menu-item-price">$9.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Fried Green Beans</div><div class="menu-item-desc">Lightly battered and fried</div></div><div class="menu-item-price">$8.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Pretzel & Beer Cheese (2)</div><div class="menu-item-desc">Soft pretzels with warm beer cheese dip</div></div><div class="menu-item-price">$10.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Brewskies Trio</div><div class="menu-item-desc">Three starters in one shareable platter</div></div><div class="menu-item-price">$15.00</div></div>
+    </div>
+
+    <div id="tab-burgers" class="tab-panel reveal">
+      <div class="menu-item"><div><div class="menu-item-name">Cheeseburger</div><div class="menu-item-desc">Classic beef patty, cheese, your choice of toppings</div></div><div class="menu-item-price">$12.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Chicken Bacon Ranch Burger</div><div class="menu-item-desc">Grilled chicken, bacon, ranch, lettuce & tomato</div></div><div class="menu-item-price">$14.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Mushroom Swiss Burger</div><div class="menu-item-desc">Sautéed mushrooms, Swiss cheese, brioche bun</div></div><div class="menu-item-price">$13.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Brewskies Burger</div><div class="menu-item-desc">House specialty burger with the works</div></div><div class="menu-item-price">$14.00</div></div>
+    </div>
+
+    <div id="tab-sandwiches" class="tab-panel reveal">
+      <div class="menu-item"><div><div class="menu-item-name">Giant Tenderloin</div><div class="menu-item-desc">Breaded pork tenderloin, hand-pounded, classic Indiana style</div></div><div class="menu-item-price">$14.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Classic Club Sandwich</div><div class="menu-item-desc">Turkey, ham, bacon, lettuce, tomato on toasted bread</div></div><div class="menu-item-price">$12.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Home-Style Breaded Chicken</div><div class="menu-item-desc">Crispy breaded chicken breast sandwich</div></div><div class="menu-item-price">$11.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Chicken Bacon Ranch Wrap</div><div class="menu-item-desc">Grilled chicken, bacon, ranch in a flour tortilla</div></div><div class="menu-item-price">$12.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Pork-Way</div><div class="menu-item-desc">Signature pulled pork sandwich with house sauce</div></div><div class="menu-item-price">$16.00</div></div>
+    </div>
+
+    <div id="tab-dinners" class="tab-panel reveal">
+      <div class="menu-item"><div><div class="menu-item-name">Shrimp Basket</div><div class="menu-item-desc">Fried shrimp with fries and dipping sauce</div></div><div class="menu-item-price">$14.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Taco Salad</div><div class="menu-item-desc">Crispy shell, seasoned beef, cheese, sour cream</div></div><div class="menu-item-price">$12.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">House Salad</div><div class="menu-item-desc">Fresh greens with your choice of dressing</div></div><div class="menu-item-price">$6.00</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">Spicy Cauliflower</div><div class="menu-item-desc">Crispy cauliflower tossed in spicy sauce</div></div><div class="menu-item-price">$8.00</div></div>
+    </div>
+
+    <div id="tab-pizza" class="tab-panel reveal">
+      <div class="menu-item"><div><div class="menu-item-name">16" Pizza</div><div class="menu-item-desc">Choose your toppings on a full 16-inch pie</div></div><div class="menu-item-price">Market</div></div>
+      <div class="menu-item"><div><div class="menu-item-name">10" Cauliflower Pizza</div><div class="menu-item-desc">Gluten-friendly cauliflower crust with your toppings</div></div><div class="menu-item-price">Market</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <div class="quote-inner reveal">
+    <blockquote>"Really good taco salad and burgers. Awesome sides too — the cheeseballs with homemade ranch and sidewinder fries are a must."</blockquote>
+    <div class="quote-author">— Google Review, Seymour, IN</div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <span class="section-tag">Find Us</span>
+      <h2 class="section-title">Come On In</h2>
+      <div class="section-divider"></div>
+      <a href="tel:8125224308" class="contact-card" style="color:inherit;">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Phone</div>
+          <div class="contact-value">(812) 522-4308</div>
+        </div>
+      </a>
+      <a href="https://maps.google.com/?q=117+E+2nd+St+Seymour+IN+47274" target="_blank" class="contact-card" style="color:inherit;">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-value">117 E 2nd St<br>Seymour, IN 47274</div>
+        </div>
+      </a>
+      <a href="mailto:brewskiesdowntown@outlook.com" class="contact-card" style="color:inherit;">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">brewskiesdowntown@outlook.com</div>
+        </div>
+      </a>
+    </div>
+    <div class="reveal">
+      <span class="section-tag">Hours</span>
+      <h2 class="section-title">When We're Open</h2>
+      <div class="section-divider"></div>
+      <div class="hours-grid">
+        <div class="hours-row"><span class="hours-day">Monday</span><span>Closed</span></div>
+        <div class="hours-row"><span class="hours-day">Tuesday</span><span>11am – 8pm</span></div>
+        <div class="hours-row"><span class="hours-day">Wednesday</span><span>11am – 8pm</span></div>
+        <div class="hours-row"><span class="hours-day">Thursday</span><span>11am – 8pm</span></div>
+        <div class="hours-row"><span class="hours-day">Friday</span><span>11am – 9pm</span></div>
+        <div class="hours-row"><span class="hours-day">Saturday</span><span>11am – 9pm</span></div>
+        <div class="hours-row"><span class="hours-day">Sunday</span><span>Closed</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Brewskies Downtown</div>
+  <div class="footer-sub">117 E 2nd St • Seymour, IN 47274 • (812) 522-4308</div>
+</footer>
+
+<script>
+  // NAV SCROLL
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // HAMBURGER
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+  // HERO SLIDESHOW
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 5000);
+
+  // MENU TABS
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
